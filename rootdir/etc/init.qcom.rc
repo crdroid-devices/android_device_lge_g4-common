@@ -70,8 +70,9 @@ on init
 
     # Set permissions for persist partition
     mkdir /persist 0771 system system
-    # Set permissions for persist partition
-    mkdir /persist 0771 system system
+
+    # Set permissions for drm partition
+    mkdir /persist-lg 0771 system system
 
     # See storage config details at http://source.android.com/devices/tech/storage/
     mkdir /mnt/shell/emulated 0700 shell shell
@@ -80,13 +81,13 @@ on init
     mkdir /mnt/media_rw/sdcard1 0700 media_rw media_rw
     mkdir /storage/sdcard1 0700 root root
 
-    mkdir /mnt/media_rw/usbdisk 0700 media_rw media_rw
-    mkdir /storage/usbdisk 0700 root root
+    mkdir /mnt/media_rw/usbdisk0 0700 media_rw media_rw
+    mkdir /storage/usbdisk0 0700 root root
 
     export EXTERNAL_STORAGE /storage/emulated/legacy
     export EMULATED_STORAGE_SOURCE /mnt/shell/emulated
     export EMULATED_STORAGE_TARGET /storage/emulated
-    export SECONDARY_STORAGE /storage/sdcard1:/storage/usbdisk
+    export SECONDARY_STORAGE /storage/sdcard1:/storage/usbdisk0
 
     # Support legacy paths
     symlink /storage/emulated/legacy /sdcard
@@ -95,8 +96,8 @@ on init
     symlink /mnt/shell/emulated/0 /storage/emulated/legacy
     symlink /storage/sdcard1 /external_sd
     symlink /storage/sdcard1 /mnt/external_sd
-    symlink /storage/usbdisk /usbdisk
-    symlink /storage/usbdisk /mnt/usbdisk
+    symlink /storage/usbdisk0 /usbdisk0
+    symlink /storage/usbdisk0 /mnt/usbdisk0
 
 on early-boot
     # set RLIMIT_MEMLOCK to 64MB
@@ -120,10 +121,9 @@ on boot
     chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/state
     chown bluetooth net_bt_stack /proc/bluetooth/sleep/btwake
     chown bluetooth net_bt_stack /proc/bluetooth/sleep/proto
+    chown bluetooth net_bt_stack /proc/bluetooth/sleep/preproto
     chown bluetooth bluetooth /proc/bluetooth/sleep/lpm
     chown bluetooth bluetooth /proc/bluetooth/sleep/btwrite
-    chown bluetooth bluetooth /sys/module/hci_uart/parameters/ath_lpm
-    chown bluetooth bluetooth /sys/module/hci_uart/parameters/ath_btwrite
     chown system system /sys/module/sco/parameters/disable_esco
     chown bluetooth bluetooth /sys/module/hci_smd/parameters/hcismd_set
     chmod 0660 /sys/module/bluetooth_power/parameters/power
@@ -131,24 +131,19 @@ on boot
     chmod 0660 /sys/class/rfkill/rfkill0/state
     chmod 0660 /proc/bluetooth/sleep/btwake
     chmod 0660 /proc/bluetooth/sleep/proto
-    chmod 0644 /proc/bluetooth/sleep/btwrite
-    chmod 0644 /proc/bluetooth/sleep/lpm
-    chown bluetooth bluetooth /dev/ttyHS0
+    chmod 0660 /proc/bluetooth/sleep/preproto
+    chmod 0660 /proc/bluetooth/sleep/lpm
+    chmod 0660 /proc/bluetooth/sleep/btwrite
+    chown bluetooth net_bt_stack /dev/ttyHS99
+    chown bluetooth net_bt_stack /dev/ttyHS0
     chmod 0660 /sys/module/hci_uart/parameters/ath_lpm
     chmod 0660 /sys/module/hci_uart/parameters/ath_btwrite
-    chown bluetooth net_bt_stack /dev/ttyHS99
+    chmod 0660 /dev/ttyHS99
     chmod 0660 /dev/ttyHS0
     chown bluetooth bluetooth /sys/devices/platform/msm_serial_hs.0/clock
     chmod 0660 /sys/devices/platform/msm_serial_hs.0/clock
 
-    chmod 0660 /dev/ttyHS2
-    chown bluetooth bluetooth /dev/ttyHS2
-
-    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/device/extldo
-    chmod 0660 /sys/class/rfkill/rfkill0/device/extldo
-    
-    
-  # Feature chip vendor : brcm
+    # Feature chip vendor : brcm
     setprop bluetooth.chip.vendor brcm
 
     # For BCM FM Radio
@@ -260,6 +255,7 @@ on boot
     # Allow access for CCID command/response timeout configuration
     chown system system /sys/module/ccid_bridge/parameters/bulk_msg_timeout
 
+
     # Flashlight
     chown system system /sys/class/leds/flashlight/brightness
     chown system system /sys/class/leds/flashlight_front/brightness
@@ -295,14 +291,14 @@ on boot
 
     # NFC ++
     # permissions for NFC
-    chmod 0600 /dev/pn544
-    chown nfc nfc /dev/pn544
+    chmod 0600 /dev/pn547
+    chown nfc nfc /dev/pn547
     setprop debug.nfc.fw_download "true"
     setprop debug.nfc.fw_boot_download "false"
     # NFC --
 
-    # HAL looks for pn54x but kernel driver uses pn544
-    symlink /dev/pn544 /dev/pn54x
+    # HAL looks for pn54x but kernel driver uses pn547
+    symlink /dev/pn547 /dev/pn54x
 
     # exfat
     insmod /system/lib/modules/texfat.ko
@@ -328,8 +324,9 @@ on boot
 # START touch_knock_on
 	chown system system /sys/devices/virtual/input/lge_touch/lpwg_data
 	chmod 664 /sys/devices/virtual/input/lge_touch/lpwg_data
-	chown system system /sys/devices/virtual/input/lge_touch/lpwg_notify
+	chown system radio /sys/devices/virtual/input/lge_touch/lpwg_notify
 	chmod 664 /sys/devices/virtual/input/lge_touch/lpwg_notify
+	write /sys/devices/virtual/input/lge_touch/lpwg_notify "1 1 0 0"
 	chown system system /sys/devices/virtual/input/lge_touch/lpwg_test_info
 	chmod 644 /sys/devices/virtual/input/lge_touch/lpwg_test_info
 	chown system system /sys/devices/virtual/input/lge_touch/lpwg_test_ctrl
@@ -351,11 +348,16 @@ on boot
 # Begin LG Volume vibrator
     chown system system /sys/class/timed_output/vibrator/amp
     chmod 664 /sys/class/timed_output/vibrator/amp
+
+    chown system system /sys/class/timed_output/vibrator/play_mode
+    chmod 644 /sys/class/timed_output/vibrator/play_mode
+    write /sys/class/timed_output/vibrator/play_mode "buffer"
 # End LG Volume vibrator
 
 # Begin SRE Display New Feature
     chown system system /sys/class/sre/sre_func/sre_status
     chmod 644 /sys/class/sre/sre_func/sre_status
+
 # End SRE Display New Feature
 
 # Power_BSP, if need, control max_frequencies for peak current issue
@@ -370,7 +372,8 @@ on boot
    chmod 0644 /sys/devices/virtual/lg_rgb_led/use_patterns/onoff_patterns
    chown system system /sys/devices/virtual/lg_rgb_led/use_patterns/setting
    chmod 0644 /sys/devices/virtual/lg_rgb_led/use_patterns/setting
-   write /sys/devices/virtual/lg_rgb_led/use_patterns/setting 1
+   write /sys/devices/virtual/lg_rgb_led/use_patterns/setting 0
+   
 # For QC2.0
    chown root system /sys/module/charger_controller/parameters/quick_charging_state
    chmod 0664 /sys/module/charger_controller/parameters/quick_charging_state
@@ -410,8 +413,10 @@ on post-fs
 
     chown system carrier /carrier
     chmod 0771 /carrier
-    #restorecon carrier partition.
+
+    # restorecon carrier partition
     restorecon_recursive /carrier
+    
     # We restorecon /preload in case preload folder has been reset.
     restorecon_recursive /preload
 
@@ -536,6 +541,13 @@ on post-fs-data
     mkdir /data/system/perfd 0770 root system
     chmod 2770 /data/system/perfd
 
+    # Create directory used by sensor subsystem
+    mkdir /persist/sensors 0775 system root
+    chmod 0664 /persist/sensors/sensors_settings
+    chown system root /persist/sensors/sensors_settings
+    mkdir /data/misc/sensors 0775 system system
+    restorecon_recursive /data/misc/sensors
+
     mkdir /data/tombstones 0771 system system
     mkdir /tombstones/modem 0771 system system
     mkdir /tombstones/lpass 0771 system system
@@ -561,6 +573,7 @@ on post-fs-data
 
     # Z2G4-BSP-TS@lge.com make directory for sns.reg used by sensordaemon
     mkdir /sns/cal/ 0644 system system
+    restorecon_recursive /sns
 
     # PCC Calibration
     chown system system /sys/devices/virtual/graphics/fb0/rgb
@@ -857,11 +870,6 @@ on property:drmdiag.load=1
 on property:drmdiag.load=0
     stop drmdiag
 
-service qcom-sh /system/bin/sh /init.qcom.sh
-    class late_start
-    user root
-    oneshot
-
 service qcom-post-boot /system/bin/sh /system/etc/init.qcom.post_boot.sh
     class late_start
     user root
@@ -930,12 +938,12 @@ service sdcard /system/bin/sdcard -u 1023 -g 1023 -l /data/media /mnt/shell/emul
     class late_start
 
 # fusewrapped external sdcard daemon running as media_rw (1023)
-service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/sdcard1 /storage/sdcard1
+service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/sdcard1 /storage/sdcard1
     class late_start
     disabled
 
 # fusewrapped external sdcard daemon running as media_rw (1023)
-service fuse_usbdisk /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/usbdisk /storage/usbdisk
+service fuse_usbdisk /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/usbdisk0 /storage/usbdisk0
     class late_start
     disabled
 
@@ -1010,13 +1018,11 @@ on property:persist.sys.qlogd=0
 service vm_bms /system/bin/vm_bms
     user root
     group root
-    disabled
 
 service msm_irqbalance /system/bin/msm_irqbalance -f /system/vendor/etc/msm_irqbalance.conf
    class core
     user root
     group root
-    disabled
 
 # init.qcom.usb.sh configure RNDIS to go through HW IPA
 service qcom-usb-sh /system/bin/sh /init.qcom.usb.sh
@@ -1200,11 +1206,18 @@ service zchgd_offmode /system/bin/zchgd -pseudooffmode -autostop -poffmodewarn
     group root graphics
     disabled
 
-service bdaddr_loader /system/bin/bdaddr_loader
+service conn_init /system/bin/hwaddrs
+    class core
     user root
-    group bluetooth net_bt_admin misc net_bt_stack
-    disabled
+    group system wifi
     oneshot
+
+# Running hwaddrs under init is enforcing 0600, we need more
+on property:init.svc.conn_init=stopped
+    chmod 644 /data/misc/wifi/config
+    chown system wifi /data/misc/wifi/config
+    chmod 644 /data/misc/bdaddr
+    chown bluetooth bluetooth /data/misc/bdaddr
 
 on property:persist.service.criticaltemp=1
    write /sys/kernel/debug/spmi/spmi-0/address 0x00867

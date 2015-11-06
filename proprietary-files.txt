@@ -737,7 +737,6 @@ bin/pm-service
 bin/mm-qcamera-app
 bin/hci_qcomm_init
 bin/msm_irqbalance
-bin/bdaddr_loader
 bin/imscmservice
 bin/irsc_util
 bin/thermal-engine
@@ -755,6 +754,8 @@ lib64/libcnefeatureconfig.so
 lib64/libloc_api_v02.so
 lib64/libloc_ds_api.so
 lib64/libril.so
+lib64/libcir_driver.so
+lib64/hw/consumerir.msm8992.so
 lib/libcnefeatureconfig.so
 lib/libmmcamera_interface.so
 lib/libloc_api_v02.so
@@ -764,3 +765,5 @@ lib/libmmjpeg_interface.so
 lib/libmorpho_image_stab31.so
 lib/libril.so
 lib/libqomx_core.so
+lib/libcir_driver.so
+lib/hw/consumerir.msm8992.so

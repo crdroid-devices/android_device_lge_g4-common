@@ -7,19 +7,37 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     persist.sys.usb.config=mtp \
     persist.sys.isUsbOtgEnabled=true
 
-# Audio
+# Camera
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+    camera.disable_zsl_mode=1
+
+# Camera add additional i/p buffer in case of encoder DCVS
 PRODUCT_PROPERTY_OVERRIDES += \
-    mm.enable.smoothstreaming=true \
-    mm.enable.qcom_parser=3314291 \
-    audio.offload.buffer.size.kb=1024 \
-    av.offload.enable=true \
-    av.streaming.offload.enable=true \
+    vidc.enc.dcvs.extra-buff-count=2
+
+#Audio   
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.audio.fluence.voicecall=true \
+    persist.audio.fluence.voicerec=false \
+    persist.audio.fluence.speaker=true \
+    ro.qc.sdk.audio.fluencetype=fluence \
+    ro.qc.sdk.audio.ssr=false \
+    tunnel.audio.encode=false \
     use.voice.path.for.pcm.voip=true \
-    audio.offload.multiple.enabled=true \
-    audio.offload.gapless.enabled=true \
+    use.dedicated.device.for.voip=true \
+    av.offload.enable=false
+
+# Media
+PRODUCT_PROPERTY_OVERRIDES += \
+    mm.enable.qcom_parser=3314291 \
+    mm.enable.smoothstreaming=true \
     media.aac_51_output_enabled=true \
-    audio.offload.pcm.16bit.enable=false \
-    audio.offload.pcm.24bit.enable=true
+    qcom.hw.aac.encoder=true
+
+# Bluetooth
+PRODUCT_PROPERTY_OVERRIDES += \
+    bluetooth.chip.vendor=brcm \
+    ro.bt.bdaddr_path="/data/misc/bdaddr"
 
 # Display
 #
