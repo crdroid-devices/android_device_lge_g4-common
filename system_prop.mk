@@ -2,10 +2,9 @@
 # System Properties for G4
 #
 
-# MTP and USB-OTG
+# MTP
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-    persist.sys.usb.config=mtp \
-    persist.sys.isUsbOtgEnabled=true
+    persist.sys.usb.config=mtp
 
 # Camera
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
@@ -17,6 +16,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 #Audio   
 PRODUCT_PROPERTY_OVERRIDES += \
+    ro.qc.sdk.audio.ssr=false \
+    persist.audio.ssr.3mic=false \
     persist.audio.fluence.voicecall=true \
     persist.audio.fluence.voicerec=false \
     persist.audio.fluence.speaker=true \
@@ -37,7 +38,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Bluetooth
 PRODUCT_PROPERTY_OVERRIDES += \
     bluetooth.chip.vendor=brcm \
-    ro.bt.bdaddr_path="/data/misc/bdaddr"
+    ro.bt.bdaddr_path="/data/misc/bluetooth/bdaddr" \
+    persist.service.avrcp.browsing=1
 
 # Display
 #
@@ -48,7 +50,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # with third party applications that do not support 3.1
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.hwc.mdpcomp.enable=true \
-    ro.opengles.version=196608 \
+    ro.opengles.version=196609 \
     ro.sf.lcd_density=560
 
 # GPS
@@ -74,22 +76,24 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Qualcomm
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.timed.enable=true \
-    ro.qualcomm.cabl=0 \
-    ro.vendor.extension_library=libqti-perfd-client.so
+    ro.qualcomm.cabl=2 \
+    ro.vendor.extension_library=libqti-perfd-client.so \
+    persist.dpm.feature=3
 
 # Radio
 PRODUCT_PROPERTY_OVERRIDES += \
     rild.libpath=/vendor/lib64/libril-qc-qmi-1.so \
     persist.radio.apm_sim_not_pwdn=1 \
-    persist.radio.add_power_save=1 
+    persist.radio.add_power_save=1 \
+    ro.telephony.ril_class=LgeLteRIL
 
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.data.netmgrd.qos.enable=false \
     ro.use_data_netmgrd=true
 
-# Recovery
+# Factory Reset Protection
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.cwm.forbid_format=/boot,/firmware,/mpt,/persist,/persist-lg,/sns
+    ro.frp.pst=/dev/block/bootdevice/by-name/persistent
 
 # Sensor debugging
 # Valid settings (and presumably what they mean):

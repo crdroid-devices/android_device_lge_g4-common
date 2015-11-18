@@ -51,6 +51,7 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.location.gps.xml:system/etc/permissions/android.hardware.location.gps.xml \
     frameworks/native/data/etc/android.hardware.nfc.hce.xml:system/etc/permissions/android.hardware.nfc.hce.xml \
     frameworks/native/data/etc/android.hardware.nfc.xml:system/etc/permissions/android.hardware.nfc.xml \
+    frameworks/native/data/etc/android.hardware.opengles.aep.xml:system/etc/permissions/android.hardware.opengles.aep.xml \
     frameworks/native/data/etc/android.hardware.sensor.barometer.xml:system/etc/permissions/android.hardware.sensor.barometer.xml \
     frameworks/native/data/etc/android.hardware.sensor.gyroscope.xml:system/etc/permissions/android.hardware.sensor.gyroscope.xml \
     frameworks/native/data/etc/android.hardware.sensor.light.xml:system/etc/permissions/android.hardware.sensor.light.xml \
@@ -81,7 +82,12 @@ PRODUCT_PACKAGES += \
     init.qcom.fm.sh \
     init.class_main.sh \
     init.qcom.post_boot.sh \
-    init.qcom.uicc.sh
+    init.qcom.uicc.sh \
+    init.msm8992.sensor.sh
+
+# RIL
+PRODUCT_PACKAGES += \
+	liblge
 
 # Audio
 PRODUCT_PACKAGES += \
@@ -110,9 +116,17 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     charger_res_images
 
-# Thermal configuration
+# Thermal
+PRODUCT_PACKAGES += \
+    thermanager
+
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/thermal-engine-8992.conf:system/etc/thermal-engine-8992.conf
+    $(LOCAL_PATH)/configs/thermanager.xml:system/etc/thermanager.xml
+
+# Sony timekeep
+PRODUCT_PACKAGES += \
+    timekeep \
+    TimeKeep
 
 # IZat configuration
 PRODUCT_COPY_FILES += \
@@ -163,9 +177,10 @@ PRODUCT_PACKAGES += \
     memtrack.msm8992 \
     liboverlay
 
-# Keymaster
+# Keystore
 PRODUCT_PACKAGES += \
-    keystore.msm8992
+    keystore.msm8992 \
+    gatekeeper.msm8992
 
 # Filesystem management tools
 PRODUCT_PACKAGES += \
@@ -202,6 +217,7 @@ PRODUCT_PACKAGES += \
     libc2dcolorconvert \
     libdashplayer \
     libdivxdrmdecrypt \
+    libextmedia_jni \
     libOmxAacEnc \
     libOmxAmrEnc \
     libOmxCore \
@@ -213,6 +229,8 @@ PRODUCT_PACKAGES += \
     libOmxVenc \
     libOmxVidcCommon \
     libstagefrighthw \
+    libstagefright_soft_flacdec \
+    libqcmediaplayer \
     qcmediaplayer
 
 PRODUCT_BOOT_JARS += \

@@ -47,7 +47,7 @@ TARGET_USES_C2D_COMPOSITION := true
 
 # Kernel
 BOARD_DTBTOOL_ARGS := -2
-BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom user_debug=31 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 boot_cpus=0-5
+BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom user_debug=31 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 msm_rtb.filter=0x37 boot_cpus=0-5
 BOARD_KERNEL_BASE := 0x00078000
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_RAMDISK_OFFSET := 0x02000000
@@ -67,6 +67,7 @@ BOARD_RECOVERYIMAGE_PARTITION_SIZE := 41943040
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 4341104640
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 24897388544
 TARGET_USERIMAGES_USE_EXT4 := true
+TARGET_USERIMAGES_USE_F2FS := true
 
 # Recovery
 TARGET_RECOVERY_FSTAB := $(COMMON_PATH)/rootdir/etc/fstab.qcom
@@ -78,22 +79,22 @@ BOARD_SUPPORTS_SOUND_TRIGGER := false
 AUDIO_FEATURE_LOW_LATENCY_PRIMARY := true
 AUDIO_FEATURE_ENABLED_ACDB_LICENSE := true
 AUDIO_FEATURE_ENABLED_COMPRESS_CAPTURE := true
-AUDIO_FEATURE_ENABLED_COMPRESS_VOIP := true
 AUDIO_FEATURE_ENABLED_DS2_DOLBY_DAP := true
 AUDIO_FEATURE_ENABLED_EXTN_FORMATS := true
 AUDIO_FEATURE_ENABLED_FLAC_OFFLOAD := true
 AUDIO_FEATURE_ENABLED_FLUENCE := true
-AUDIO_FEATURE_ENABLED_FM := true
+#AUDIO_FEATURE_ENABLED_FM := true
 AUDIO_FEATURE_ENABLED_HFP := true
-AUDIO_FEATURE_ENABLED_INCALL_MUSIC := true
 AUDIO_FEATURE_ENABLED_KPI_OPTIMIZE := true
 AUDIO_FEATURE_ENABLED_LOW_LATENCY_CAPTURE := true
-AUDIO_FEATURE_ENABLED_INCALL_MUSIC := true
-AUDIO_FEATURE_ENABLED_MULTI_VOICE_SESSIONS := true
 AUDIO_FEATURE_ENABLED_MULTIPLE_TUNNEL := true
 AUDIO_FEATURE_ENABLED_PCM_OFFLOAD := true
 AUDIO_FEATURE_ENABLED_PCM_OFFLOAD_24 := true
 AUDIO_FEATURE_ENABLED_PROXY_DEVICE := true
+
+AUDIO_FEATURE_ENABLED_MULTI_VOICE_SESSIONS := true
+#AUDIO_FEATURE_ENABLED_INCALL_MUSIC := true
+AUDIO_FEATURE_ENABLED_COMPRESS_VOIP := true
 
 # Wi-Fi
 BOARD_WLAN_DEVICE := bcmdhd
@@ -112,6 +113,11 @@ BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_BCM := true
 BOARD_BLUEDROID_VENDOR_CONF := device/lge/g4-common/bluetooth/libbt_vndcfg.txt
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/lge/g4-common/bluetooth
+
+# GPS
+TARGET_GPS_HAL_PATH := $(COMMON_PATH)/gps
+BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := msm8992
+TARGET_NO_RPC := true
 
 # Camera
 USE_DEVICE_SPECIFIC_CAMERA := true
@@ -136,9 +142,6 @@ EXTENDED_FONT_FOOTPRINT := true
 # Lights
 TARGET_PROVIDES_LIBLIGHT := true
 
-# Logging
-TARGET_USES_LOGD=false
-
 # Offmode Charging
 COMMON_GLOBAL_CFLAGS += \
     -DBOARD_CHARGING_CMDLINE_NAME='"androidboot.mode"' \
@@ -146,6 +149,7 @@ COMMON_GLOBAL_CFLAGS += \
 
 # Power
 TARGET_POWERHAL_VARIANT := qcom
+TARGET_TAP_TO_WAKE_NODE := "/sys/devices/virtual/input/lge_touch/tap2wake"
 
 # Qualcomm support
 BOARD_USES_QCOM_HARDWARE := true
@@ -157,41 +161,14 @@ TARGET_PLATFORM_DEVICE_BASE := /devices/soc.0/
 include device/qcom/sepolicy/sepolicy.mk
 BOARD_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy
 
-BOARD_SEPOLICY_UNION += \
-    device.te \
-    drmserver.te \
-    file.te \
-    file_contexts \
-    genfs_contexts \
-    init-shell.te \
-    healthd.te \
-    mediaserver.te \
-    netmgrd.te \
-    property.te \
-    property_contexts \
-    qmuxd.te \
-    qseecomd.te \
-    rild.te \
-    sensors.te \
-    servicemanager.te \
-    system-server.te \
-    time-daemon.te \
-    thermal-engine.te \
-    usb-uicc-daemon.te \
-    vold.te \
-    wpa_supplicant.te
-
-# Time services
-BOARD_USES_QC_TIME_SERVICES := true
-
 # Disable HW based full disk encryption
 TARGET_HW_DISK_ENCRYPTION := false
 
 # Vendor init
 TARGET_INIT_VENDOR_LIB := libinit_msm
 
-#RIL
-TARGET_RELEASE_CPPFLAGS += -DNEEDS_LGE_RIL_SYMBOLS
+# RIL
+BOARD_RIL_CLASS := ../../../device/lge/g4-common/ril/
 
 # NFC
 BOARD_NFC_CHIPSET := pn547
