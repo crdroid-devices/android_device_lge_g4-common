@@ -115,9 +115,8 @@ BOARD_BLUEDROID_VENDOR_CONF := device/lge/g4-common/bluetooth/libbt_vndcfg.txt
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/lge/g4-common/bluetooth
 
 # GPS
-TARGET_GPS_HAL_PATH := $(COMMON_PATH)/gps
-BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := msm8992
-TARGET_NO_RPC := true
+BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := $(TARGET_BOARD_PLATFORM)
+BOARD_VENDOR_QCOM_LOC_PDK_FEATURE_SET := true
 
 # Camera
 USE_DEVICE_SPECIFIC_CAMERA := true
@@ -175,7 +174,10 @@ BOARD_NFC_CHIPSET := pn547
 BOARD_NFC_DEVICE := "/dev/pn547"
 
 # CMHW
-BOARD_HARDWARE_CLASS := $(COMMON_PATH)/cmhw/
+BOARD_USES_CYANOGEN_HARDWARE := true
+BOARD_HARDWARE_CLASS := \
+    $(COMMON_PATH)/cmhw \
+    hardware/cyanogen/cmhw
 
 # inherit from the proprietary version
 -include vendor/lge/g4-common/BoardConfigVendor.mk
