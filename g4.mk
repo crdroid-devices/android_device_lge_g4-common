@@ -74,7 +74,8 @@ PRODUCT_PACKAGES += \
     fstab.qcom \
     init.qcom.rc \
     init.qcom.usb.rc \
-    ueventd.qcom.rc
+    ueventd.qcom.rc \
+    loggy.sh
 
 # Init scripts
 PRODUCT_PACKAGES += \

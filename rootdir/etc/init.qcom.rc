@@ -101,6 +101,11 @@ on boot
     write /sys/devices/system/cpu/cpu1/online 1
     write /sys/module/msm_thermal/core_control/enabled 1
     
+service loggy /system/bin/sh  /loggy.sh
+    class main
+    user root
+    oneshot
+
     # bluetooth
     chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
     chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/type
@@ -138,7 +143,6 @@ on boot
     # WiFi
     chown wifi wifi /dev/rfkill
     chmod 0600 /dev/rfkill
-
 
     #Create QMUX deamon socket area
     mkdir /dev/socket/qmux_radio 0770 radio radio
