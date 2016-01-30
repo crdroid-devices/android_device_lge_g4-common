@@ -84,7 +84,8 @@ PRODUCT_PACKAGES += \
     init.class_main.sh \
     init.qcom.post_boot.sh \
     init.qcom.uicc.sh \
-    init.msm8992.sensor.sh
+    init.msm8992.sensor.sh \
+    init.baseband.sh
 
 # RIL
 PRODUCT_PACKAGES += \
@@ -194,9 +195,6 @@ PRODUCT_PACKAGES += \
 # GPS
 PRODUCT_PACKAGES += \
     gps.msm8992
-
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/gps.conf:system/etc/gps.conf
 
 # Lights
 PRODUCT_PACKAGES += \
