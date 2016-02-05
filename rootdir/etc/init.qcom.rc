@@ -26,6 +26,7 @@
 #
 
 import init.qcom.usb.rc
+import init.qcom.power.rc
 
 on early-init
     mount debugfs debugfs /sys/kernel/debug
@@ -139,7 +140,7 @@ service loggy /system/bin/sh  /loggy.sh
 
     # For BCM FM Radio
     setprop ro.fm.module BCM
-    
+
     # WiFi
     chown wifi wifi /dev/rfkill
     chmod 0600 /dev/rfkill
@@ -289,9 +290,6 @@ service loggy /system/bin/sh  /loggy.sh
 
     # HAL looks for pn54x but kernel driver uses pn547
     symlink /dev/pn547 /dev/pn54x
-
-    # exfat
-    insmod /system/lib/modules/texfat.ko
 
 # START touch_driver
     chown system system /sys/devices/virtual/input/lge_touch/incoming_call
@@ -963,9 +961,6 @@ service hcidump /system/bin/sh /system/etc/hcidump.sh
     disabled
     oneshot
 
-service charger /charger
-    class charger
-
 service ssr_diag /system/bin/ssr_diag
     class late_start
     user system
@@ -984,16 +979,6 @@ service charger_monitor /system/bin/charger_monitor
     user root
     group root
     disabled
-
-service qbcharger /charger -m 1
-    disabled
-    oneshot
-
-on property:sys.qbcharger.enable=true
-    start qbcharger
-
-on property:sys.qbcharger.enable=false
-    stop qbcharger
 
 service diag_mdlog_start /system/bin/diag_mdlog
     class late_start
