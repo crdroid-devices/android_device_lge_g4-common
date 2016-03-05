@@ -188,11 +188,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     QuickCircle
 
-# Keystore
-PRODUCT_PACKAGES += \
-    keystore.msm8992 \
-    gatekeeper.msm8992
-
 # GPS
 PRODUCT_PACKAGES += \
     gps.msm8992
@@ -231,12 +226,7 @@ PRODUCT_PACKAGES += \
     libOmxVenc \
     libOmxVidcCommon \
     libstagefrighthw \
-    libstagefright_soft_flacdec \
-    libqcmediaplayer \
-    qcmediaplayer
-
-PRODUCT_BOOT_JARS += \
-    qcmediaplayer
+    libstagefright_soft_flacdec
 
 # Power
 PRODUCT_PACKAGES += \
